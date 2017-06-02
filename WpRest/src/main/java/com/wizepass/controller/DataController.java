@@ -19,10 +19,11 @@ import com.wizepass.util.Constants;
 public class DataController {
 	private static List<Map<String, Object>> usersList = new ArrayList<Map<String,Object>>();
 	private static Client client = EsTransportClient.getTransportClient(Constants.ES_HOST, Constants.PORT);
-	private static List<Map<String, Object>> listNames = new ArrayList<Map<String,Object>>();	
+	//private static List<Map<String, Object>> listNames = new ArrayList<Map<String,Object>>();	
 
 	
 	public List<Map<String,Object>> getUsers(){
+		List<Map<String, Object>> listOfUsers = new ArrayList<Map<String,Object>>();
 		SearchResponse searchResponse = null;
 		int scrollsize = 1000;
 		int i = 0;
@@ -35,13 +36,14 @@ public class DataController {
 												.execute()
 												.actionGet();
 					for(SearchHit hit : searchResponse.getHits()){
-						  usersList.add(hit.getSource());
+						listOfUsers.add(hit.getSource());
 		            	}
 		            i++;
 		        }
-					return usersList;		
+					return listOfUsers;		
 		}
 	public List<Map<String,Object>> getRegistrationToken(){
+		List<Map<String, Object>> listOfReg = new ArrayList<Map<String,Object>>();
 		SearchResponse searchResponse = null;
 		int scrollsize = 1000;
 		int i = 0;
@@ -54,14 +56,15 @@ public class DataController {
 												.execute()
 												.actionGet();
 					for(SearchHit hit : searchResponse.getHits()){
-						  usersList.add(hit.getSource());
+						listOfReg.add(hit.getSource());
 		            	}
 		            i++;
 		        }
-					return usersList;		
+					return listOfReg;		
 		}
 	
 	public List<Map<String, Object>> getByName(String name){
+		List<Map<String, Object>> listOfSearchName = new ArrayList<Map<String,Object>>();
 		QueryBuilder qname = 	QueryBuilders.nestedQuery("attributes", 
 								QueryBuilders.boolQuery()
 								.must(QueryBuilders.matchQuery("attributes.account_name", name)));
@@ -72,13 +75,13 @@ public class DataController {
 						.execute()
 						.actionGet();
 			for(SearchHit hit : sr.getHits()){
-				listNames.add(hit.getSource());			
+				listOfSearchName.add(hit.getSource());			
 			}
 			}catch(Exception e){
 				System.out.println("Could not find data"+ e);	
 			}
 		
-		return listNames;
+		return listOfSearchName;
 		
 	}
 }
