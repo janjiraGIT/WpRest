@@ -11,8 +11,8 @@ public class EsTransportClient {
 	private static TransportClient client;
 	public static Client getTransportClient(String host, int port){
 		try{	
-			   client =    TransportClient.builder().build()
-					   .addTransportAddress(new InetSocketTransportAddress
+			   client = TransportClient.builder().build()
+					   	.addTransportAddress(new InetSocketTransportAddress
 					   (new InetSocketAddress(host, port)));  
 						 
 		}catch(ConnectTransportException e){

@@ -17,10 +17,7 @@ import com.wizepass.elasticsearch.EsTransportClient;
 import com.wizepass.util.Constants;
 
 public class DataController {
-	private static List<Map<String, Object>> usersList = new ArrayList<Map<String,Object>>();
 	private static Client client = EsTransportClient.getTransportClient(Constants.ES_HOST, Constants.PORT);
-	//private static List<Map<String, Object>> listNames = new ArrayList<Map<String,Object>>();	
-
 	
 	public List<Map<String,Object>> getUsers(){
 		List<Map<String, Object>> listOfUsers = new ArrayList<Map<String,Object>>();
@@ -42,6 +39,28 @@ public class DataController {
 		        }
 					return listOfUsers;		
 		}
+	
+	public List<Map<String,Object>> getMg(){
+		List<Map<String, Object>> listOfUsers = new ArrayList<Map<String,Object>>();
+		SearchResponse searchResponse = null;
+		int scrollsize = 1000;
+		int i = 0;
+		while ( searchResponse == null || searchResponse.getHits().hits().length !=0){
+					searchResponse = client.prepareSearch(Constants.INDEX)
+												.setTypes(Constants.TYPE_MG)
+												.setQuery(QueryBuilders.matchAllQuery())
+												.setSize(scrollsize)
+												.setFrom(i * scrollsize)
+												.execute()
+												.actionGet();
+					for(SearchHit hit : searchResponse.getHits()){
+						listOfUsers.add(hit.getSource());
+		            	}
+		            i++;
+		        }
+					return listOfUsers;		
+		}
+	
 	public List<Map<String,Object>> getRegistrationToken(){
 		List<Map<String, Object>> listOfReg = new ArrayList<Map<String,Object>>();
 		SearchResponse searchResponse = null;

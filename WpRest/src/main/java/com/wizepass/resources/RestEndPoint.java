@@ -40,6 +40,17 @@ public class RestEndPoint {
 		return usersInJsonArray.toString();		
 	}
 	
+	// http://localhost:8081/WpRest/users/mg
+	@GET
+	@Path("/mg")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getMg() throws JSONException {
+		final DataController controller = new DataController();		
+		final  List<Map<String,Object>>  mg  = controller.getMg();
+		final JSONArray usersInJsonArray = new JSONArray(mg);		
+		return usersInJsonArray.toString();		
+	}
+	
 	// http://127.0.0.1:8081/WpRest/users/pesote 
 	@GET
 	@Path("/{name}")

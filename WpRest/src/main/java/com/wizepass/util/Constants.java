@@ -7,4 +7,5 @@ public class Constants {
 	public static final String INDEX = "wpdb";
 	public static final String 	TYPE_USERS = "users";
 	public static final String TYPE_REG = "regtokens";
+	public static final String TYPE_MG = "mg";
 }
