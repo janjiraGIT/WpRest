@@ -19,5 +19,13 @@ public class EsResponse {
                 .actionGet();	
 		return indexresponse;			
 	}
+	public static IndexResponse putNewDocument( String index, String type , String id, XContentBuilder Xbuilder) throws IOException{	
+		final Client client = EsTransportClient.getTransportClient(Constants.ES_HOST,Constants.PORT);	
+		IndexResponse indexresponse = client.prepareIndex(index, type,id)
+                .setSource(Xbuilder)
+                .execute()
+                .actionGet();	
+		return indexresponse;			
+	}
 
 }
