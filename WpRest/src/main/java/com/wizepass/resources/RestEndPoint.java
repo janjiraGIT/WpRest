@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -13,7 +14,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
@@ -87,19 +90,18 @@ public class RestEndPoint {
 		JSONObject result = new JSONObject(dataStr);
 		return result.toString();
 	}
-	
-	// TODO : PUT for replace data by passing argument , recod_code 
-	@PUT
+
+	/** Deleteregistrationtokens _id from Elasticsearch 
+	 * @param id
+	 * @return response
+	 */
+	@DELETE
     @Path("/registrationtokens/{id}")
 	@Produces(MediaType.APPLICATION_JSON)	
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String updateRegistrationTokens(String id, InputStream jsonObj) throws IOException{
-		final DataStream data = new DataStream();
-		final String dataStr = data.readInputStream(jsonObj);
-		XContentParser parser = XContentFactory.xContent(XContentType.JSON).createParser(dataStr);		
-		XContentBuilder Xbuilder = XContentFactory.jsonBuilder().copyCurrentStructure(parser);		
-		EsResponse.putNewDocument(Constants.INDEX, Constants.TYPE_REG, id, Xbuilder);
-		JSONObject result = new JSONObject(dataStr);
-		return result.toString();
+	//@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteRegistrationTokens(@PathParam("id") String id){
+		final DataController controller = new DataController();	
+		controller.deleteById(id);		
+		return Response.status(200).entity("The document had been deleted!").build();
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
 
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -40,26 +41,6 @@ public class DataController {
 					return listOfUsers;		
 		}
 	
-//	public List<Map<String,Object>> getMg(){
-//		List<Map<String, Object>> listOfUsers = new ArrayList<Map<String,Object>>();
-//		SearchResponse searchResponse = null;
-//		int scrollsize = 1000;
-//		int i = 0;
-//		while ( searchResponse == null || searchResponse.getHits().hits().length !=0){
-//					searchResponse = client.prepareSearch(Constants.INDEX)
-//												.setTypes(Constants.TYPE_MG)
-//												.setQuery(QueryBuilders.matchAllQuery())
-//												.setSize(scrollsize)
-//												.setFrom(i * scrollsize)
-//												.execute()
-//												.actionGet();
-//					for(SearchHit hit : searchResponse.getHits()){
-//						listOfUsers.add(hit.getSource());
-//		            	}
-//		            i++;
-//		        }
-//					return listOfUsers;		
-//		}
 	
 	public List<Map<String,Object>> getRegistrationToken(){
 		List<Map<String, Object>> listOfReg = new ArrayList<Map<String,Object>>();
@@ -98,10 +79,20 @@ public class DataController {
 			}
 			}catch(Exception e){
 				System.out.println("Could not find data"+ e);	
-			}
-		
-		return listOfSearchName;
+			}	
+		return listOfSearchName;		
+	}
+	
+	/**
+	 * @param id
+	 * @return response
+	 */
+	public DeleteResponse deleteById(String id){
+		DeleteResponse response = client.prepareDelete(Constants.INDEX, Constants.TYPE_REG, id).get();
+		return response;
 		
 	}
+	
+	
 }
 
